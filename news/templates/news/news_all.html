@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}news List {% endblock %}
+
+{% block content %}
+<div id="content">
+  <h1>IT News List</h1>
+
+  <form action="{% url "news:news_list" %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Crawl latest news" />
+  </form><br/>
+  <form action="{% url "news:search" %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Go to Search" />
+  </form><br/>
+
+  <!-- display news list -->
+
+  {% for new in news %}
+  <h2><a href="{% url 'news:news_detail' new.id %}">
+      {{ new.title }}</a></h2>
+      {{ new.writer}}
+      <p>{{ new.preview }}</p>
+      <br/>
+  {% endfor %}
+
+  <!-- paging link -->
+  <div>
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Prev</a>
+    {% endif %} [ page {{ page_obj.number }} / {{page_obj.paginator.num_pages }} ]
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
